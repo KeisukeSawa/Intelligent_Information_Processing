@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 class Queen{
@@ -79,8 +80,8 @@ class Queen{
 	}
 
 	public static void main(String args[]){
-		int q[]=new int[SIZE];
-		int n[]=new int[SIZE];
+	        int q[]=new int[SIZE]; // ルートノード
+		int n[]=new int[SIZE]; // 今見ている点のこと
 		int check = 0;
 		
 		// ルートノードを初期値0で生成する。
@@ -102,6 +103,7 @@ class Queen{
 		        // step4 if nが目標節点である then 探索は成功、終了
 		        if(check_solve(n) == SIZE){
 			        printdata(n);
+				printboard(n);
 				break;
 			}
 
@@ -110,6 +112,17 @@ class Queen{
 			 *      子節点からnへのポインタをつける step2へ
 			 * else step2へ                                     
 			 */
+			if(check_solve(n) <= SIZE){
+			        for(int i=1; i<=SIZE; i++){
+				        if(check_solve(n) >= 0 && check_solve(n) <=SIZE){
+					        push(n);
+						System.out.println(n);
+				        }
+				}
+
+			}
+			        
+			        
 
 
 		    
