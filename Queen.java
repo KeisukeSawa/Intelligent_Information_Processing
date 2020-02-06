@@ -83,6 +83,8 @@ class Queen{
 	        int q[]=new int[SIZE]; // ルートノード
 		int n[]=new int[SIZE]; // 今見ている点のこと
 		int check = 0;
+		int index = 0;
+		
 		
 		// ルートノードを初期値0で生成する。
 		for(int i=0;i<SIZE;i++){
@@ -113,18 +115,17 @@ class Queen{
 			 * else step2へ                                     
 			 */
 			if(check_solve(n) <= SIZE){
-			        for(int i=1; i<=SIZE; i++){
+			        for(int i=7; i>=0; i--){
+
+				        n[index] = i;
+				        
 				        if(check_solve(n) >= 0 && check_solve(n) <=SIZE){
 					        push(n);
-						System.out.println(n);
+						//System.out.println(n);
 				        }
 				}
 
 			}
-			        
-			        
-
-
 		    
 		}
 		
