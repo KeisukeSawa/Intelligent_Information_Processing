@@ -1,57 +1,60 @@
 
 import java.util.*;
 
-class Queen{
-    
-	final static int SIZE=8;
+class Queen {
 
-	static LinkedList<int[]> l1=new LinkedList<int[]>();
+	final static int SIZE = 8;
 
-        /*ç›¤é¢ãƒ‡ãƒ¼ã‚¿é…åˆ—qã‚’ãƒªã‚¹ãƒˆã®æœ€å¾Œã«å…¥ã‚Œã‚‹*/
-	static void enqueue(int q[]){
-	        l1.offer(q.clone());
+	static LinkedList<int[]> l1 = new LinkedList<int[]>();
+
+	/* ”Õ–Êƒf[ƒ^”z—ñq‚ğƒŠƒXƒg‚ÌÅŒã‚É“ü‚ê‚é */
+	static void enqueue(int q[]) {
+		l1.offer(q.clone());
 	}
 
-        /*ãƒªã‚¹ãƒˆã®å…ˆé ­ã‹ã‚‰ç›¤é¢ãƒ‡ãƒ¼ã‚¿ã‚’å–ã‚Šå‡ºã™*/
-	static int[] dequeue(){
-	        /*æ­£å¸¸ã«å–ã‚Šå‡ºã›ãŸã¨ãã¯é…åˆ—ãŒè¿”ã•ã‚Œã‚‹*/
+	/* ƒŠƒXƒg‚Ìæ“ª‚©‚ç”Õ–Êƒf[ƒ^‚ğæ‚èo‚· */
+	static int[] dequeue() {
+		/* ³í‚Éæ‚èo‚¹‚½‚Æ‚«‚Í”z—ñ‚ª•Ô‚³‚ê‚é */
 		return l1.poll();
-		/*ãƒªã‚¹ãƒˆãŒç©ºã®æ™‚ã¯nullãŒè¿”ã•ã‚Œã‚‹*/
-	}                      
+		/* ƒŠƒXƒg‚ª‹ó‚Ì‚Ínull‚ª•Ô‚³‚ê‚é */
+	}
 
-        /*ãƒªã‚¹ãƒˆã®å…ˆé ­ã‹ã‚‰ç›¤é¢ãƒ‡ãƒ¼ã‚¿ã‚’å–ã‚Šå‡ºã™*/
-	static int[] pop(){ 
-		try{
-		         /*æ­£å¸¸ã«å–ã‚Šå‡ºã›ãŸã¨ãã¯é…åˆ—ãŒè¿”ã•ã‚Œã‚‹*/
-			return l1.pop();   	           
-		}catch(NoSuchElementException e){
-		        /*ãƒªã‚¹ãƒˆãŒç©ºã®æ™‚ã¯nullãŒè¿”ã•ã‚Œã‚‹*/
-			return null;                    
+	/* ƒŠƒXƒg‚Ìæ“ª‚©‚ç”Õ–Êƒf[ƒ^‚ğæ‚èo‚· */
+	static int[] pop() {
+		try {
+			/* ³í‚Éæ‚èo‚¹‚½‚Æ‚«‚Í”z—ñ‚ª•Ô‚³‚ê‚é */
+			return l1.pop();
+		} catch (NoSuchElementException e) {
+			/* ƒŠƒXƒg‚ª‹ó‚Ì‚Ínull‚ª•Ô‚³‚ê‚é */
+			return null;
 		}
 	}
 
-        /*ç›¤é¢ãƒ‡ãƒ¼ã‚¿é…åˆ—qã‚’ãƒªã‚¹ãƒˆã®å…ˆé ­ã«å…¥ã‚Œã‚‹*/
-	static void push(int q[]){
+	/* ”Õ–Êƒf[ƒ^”z—ñq‚ğƒŠƒXƒg‚Ìæ“ª‚É“ü‚ê‚é */
+	static void push(int q[]) {
 		l1.push(q.clone());
 	}
 
-        /*l1ã«æ ¼ç´ã•ã‚Œã¦ã„ã‚‹è¦ç´ ã®æ•°ã‚’è¿”ã™*/
-	static int size(){
+	/* l1‚ÉŠi”[‚³‚ê‚Ä‚¢‚é—v‘f‚Ì”‚ğ•Ô‚· */
+	static int size() {
 		return l1.size();
 	}
 
-        /*ç›¤é¢ãƒ‡ãƒ¼ã‚¿qã§queenã®åˆ©ãã‚’èª¿ã¹ã‚‹*/
-	static int check_solve(int q[]){
-	        /*è¿”ã‚Šå€¤-1ãªã‚‰ã°åˆ©ãç­‹ã«é§’ãŒã‚ã‚‹*/
-  	        int i,j,c=0;
-		/*è¿”ã‚Šå€¤0ä»¥ä¸Šãªã‚‰ã°åˆ©ãç­‹ã«é§’ãŒç„¡ãã¦é…ç½®ã§ãã¦ã„ã‚‹é§’ã®æ•°ã§ã‚ã‚‹*/
-		for(i=0;i<SIZE;i++){  
-		        if(q[i]!=0){
-			        for(j=0;j<SIZE;j++){
-					if(j!=i &&  q[j]!=0){
-					        if(q[j]==q[i])return -1;
-	  				        if((q[i]-i)==(q[j]-j))return -1;
-	  				        if((q[i]+i)==(q[j]+j))return -1;
+	/* ”Õ–Êƒf[ƒ^q‚Åqueen‚Ì—˜‚«‚ğ’²‚×‚é */
+	static int check_solve(int q[]) {
+		/* •Ô‚è’l-1‚È‚ç‚Î—˜‚«‹Ø‚É‹î‚ª‚ ‚é */
+		int i, j, c = 0;
+		/* •Ô‚è’l0ˆÈã‚È‚ç‚Î—˜‚«‹Ø‚É‹î‚ª–³‚­‚Ä”z’u‚Å‚«‚Ä‚¢‚é‹î‚Ì”‚Å‚ ‚é */
+		for (i = 0; i < SIZE; i++) {
+			if (q[i] != 0) {
+				for (j = 0; j < SIZE; j++) {
+					if (j != i && q[j] != 0) {
+						if (q[j] == q[i])
+							return -1;
+						if ((q[i] - i) == (q[j] - j))
+							return -1;
+						if ((q[i] + i) == (q[j] + j))
+							return -1;
 					}
 				}
 				c++;
@@ -60,60 +63,70 @@ class Queen{
 		return c;
 	}
 
-        /*ç›¤é¢ãƒ‡ãƒ¼ã‚¿qã®å®Ÿéš›ã®é§’ã®é…ç½®ã‚’è¡¨ç¤ºã™ã‚‹*/
-	static void printboard(int q[]){
-	        int i,j;
-  	        for(j=1;j<=SIZE;j++){
-		        for(i=0;i<SIZE;i++){
-			        if(q[i]==j) System.out.print("Q ");
-				else System.out.print("_ ");
+	/* ”Õ–Êƒf[ƒ^q‚ÌÀÛ‚Ì‹î‚Ì”z’u‚ğ•\¦‚·‚é */
+	static void printboard(int q[]) {
+		int i, j;
+		for (j = 1; j <= SIZE; j++) {
+			for (i = 0; i < SIZE; i++) {
+				if (q[i] == j)
+					System.out.print("Q ");
+				else
+					System.out.print("_ ");
 			}
 			System.out.println();
 		}
 	}
 
-        /*ç›¤é¢ãƒ‡ãƒ¼ã‚¿qã®å€¤ã‚’è¡¨ç¤ºã•ã›ã‚‹*/
-	static void printdata(int q[]){
-	        int i;
-		for(i=0;i<SIZE;i++) System.out.print(q[i]+" ");
+	/* ”Õ–Êƒf[ƒ^q‚Ì’l‚ğ•\¦‚³‚¹‚é */
+	static void printdata(int q[]) {
+		int i;
+		for (i = 0; i < SIZE; i++)
+			System.out.print(q[i] + " ");
 		System.out.println();
 	}
 
-	public static void main(String args[]){
-	        int q[]=new int[SIZE]; // ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰
-		int n[]=new int[SIZE]; // ä»Šè¦‹ã¦ã„ã‚‹ç‚¹ã®ã“ã¨
+	public static void main(String args[]) {
+		int q[] = new int[SIZE]; // ƒ‹[ƒgƒm[ƒh
+		int n[] = new int[SIZE]; // ¡Œ©‚Ä‚¢‚é“_‚Ì‚±‚Æ
 		int check = 0;
+<<<<<<< HEAD
 		int index = 0;
 		
 		
 		// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‚’åˆæœŸå€¤0ã§ç”Ÿæˆã™ã‚‹ã€‚
 		for(int i=0;i<SIZE;i++){
 		        q[i] = 0;
+=======
+
+		// ƒ‹[ƒgƒm[ƒh‚ğ‰Šú’l0‚Å¶¬‚·‚éB
+		for (int i = 0; i < SIZE; i++) {
+			q[i] = 0;
+>>>>>>> 29a51de7669e8a70f2aa6484983a2642d1660e50
 		}
 
-		System.out.println("æ·±ã•å„ªå…ˆæ¢ç´¢");
-		
-		// step1  ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‚’ãƒªã‚¹ãƒˆl1ã«å…¥ã‚Œã‚‹
-		push(q);
-		
-		// step2 if L1 = ç©º then æ¢ç´¢ã¯å¤±æ•—ã€çµ‚äº†
-		while(!l1.isEmpty()){
-		    
-		        // step3 L1ã®å…ˆé ­ã®ç¯€ç‚¹nã‚’å–ã‚Šé™¤ã
-		        n=pop();
+		System.out.println("[‚³—Dæ’Tõ");
 
-		        // step4 if nãŒç›®æ¨™ç¯€ç‚¹ã§ã‚ã‚‹ then æ¢ç´¢ã¯æˆåŠŸã€çµ‚äº†
-		        if(check_solve(n) == SIZE){
-			        printdata(n);
+		// step1 ƒ‹[ƒgƒm[ƒh‚ğƒŠƒXƒgl1‚É“ü‚ê‚é
+		push(q);
+
+		// step2 if L1 = ‹ó then ’Tõ‚Í¸”sAI—¹
+		while (!l1.isEmpty()) {
+
+			// step3 L1‚Ìæ“ª‚Ìß“_n‚ğæ‚èœ‚­
+			n = pop();
+
+			// step4 if n‚ª–Ú•Wß“_‚Å‚ ‚é then ’Tõ‚Í¬Œ÷AI—¹
+			if (check_solve(n) == SIZE) {
+				printdata(n);
 				printboard(n);
 				break;
 			}
 
-			/* step5 if nãŒå±•é–‹ã§ãã‚‹ï¼ˆå­ç¯€ç‚¹ã‚’æŒã¤ï¼‰
-			 * then å±•é–‹ã—ã€å¾—ã‚‰ã‚ŒãŸå­ç¯€ç‚¹ã‚’ãƒªã‚¹ãƒˆl1ã®å…ˆé ­ã«å…¥ã‚Œã‚‹
-			 *      å­ç¯€ç‚¹ã‹ã‚‰nã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’ã¤ã‘ã‚‹ step2ã¸
-			 * else step2ã¸                                     
+			/*
+			 * step5 if n‚ª“WŠJ‚Å‚«‚éiqß“_‚ğ‚Âj then “WŠJ‚µA“¾‚ç‚ê‚½qß“_‚ğƒŠƒXƒgl1‚Ìæ“ª‚É“ü‚ê‚é qß“_‚©‚çn‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚Â‚¯‚é
+			 * step2‚Ö else step2‚Ö
 			 */
+<<<<<<< HEAD
 			if(check_solve(n) <= SIZE){
 			        for(int i=7; i>=0; i--){
 
@@ -127,8 +140,19 @@ class Queen{
 
 			}
 		    
+=======
+			if (check_solve(n) <= SIZE) {
+				for (int i = 1; i <= SIZE; i++) {
+					if (check_solve(n) >= 0 && check_solve(n) <= SIZE) {
+						push(n);
+						System.out.println(n);
+					}
+				}
+
+			}
+
+>>>>>>> 29a51de7669e8a70f2aa6484983a2642d1660e50
 		}
-		
 
 	}
 }

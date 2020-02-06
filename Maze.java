@@ -1,127 +1,120 @@
 import java.awt.Point;
 import java.util.*;
 
+class Node {
+	Point p;/* À•W*/  
+	int fDash;/* •]‰¿ŠÖ”’l*/ 
+	int g;/* ‚±‚ÌÀ•W‚Ü‚ÅƒRƒXƒg*/ 
+	Node parent;/* eß“_‚ğw‚·ƒ|ƒCƒ“ƒ^*/ 
 
-class Node{
-	Point p;/*åº§æ¨™*/ 
-	int fDash;/*è©•ä¾¡é–¢æ•°å€¤*/
-	int g;/*ã“ã®åº§æ¨™ã¾ã§ã‚³ã‚¹ãƒˆ*/
-	Node parent;/*è¦ªç¯€ç‚¹ã‚’æŒ‡ã™ãƒã‚¤ãƒ³ã‚¿*/
-
-	Node(int x,int y,int fd,int gd){
-		p=new Point(x,y);
-		fDash=fd;
-		g=gd;
+	Node(int x, int y, int fd, int gd) {
+		p = new Point(x, y);
+		fDash = fd;
+		g = gd;
 	}
 
-	public boolean equals(Object n){
-		return p.equals(((Node)n).p);
+	public boolean equals(Object n) {
+		return p.equals(((Node) n).p);
 	}
 }
 
+class Maze {
 
-class Maze{
+	static final int WIDTH = 6;
+	static final int HEIGHT = 7;
 
-	static final int WIDTH=6;
-	static final int HEIGHT=7;
+	/* –À˜H‚Ìƒf[ƒ^*/ 
+	static final int maze[][] = { { 1, 1, 1, 1, 1, 1, 1, 1 }, { 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 1, 1, 1, 0, 1, 0, 1 },
+			{ 1, 0, 0, 0, 0, 1, 0, 1 }, { 1, 0, 1, 0, 1, 1, 0, 1 }, { 1, 0, 1, 0, 0, 0, 0, 1 },
+			{ 1, 0, 1, 1, 1, 1, 1, 1 }, { 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 1, 1, 1, 1, 1, 1, 1 } };
 
+	static Point start = new Point(1, 1);/* o”­À•W*/ 
+	static Point goal = new Point(6, 7); /* ƒS[ƒ‹‚ÌÀ•W*/ 
 
-	/*è¿·è·¯ã®ãƒ‡ãƒ¼ã‚¿*/
-	static final int maze[][]={{1,1,1,1,1,1,1,1},
-			     {1,0,0,0,0,0,0,1},
-			     {1,1,1,1,0,1,0,1},
-			     {1,0,0,0,0,1,0,1},
-			     {1,0,1,0,1,1,0,1},
-			     {1,0,1,0,0,0,0,1},
-			     {1,0,1,1,1,1,1,1},
-			     {1,0,0,0,0,0,0,1},
-			     {1,1,1,1,1,1,1,1}};
-
-
-	static Point start=new Point(1,1);/*å‡ºç™ºåº§æ¨™*/
-	static Point goal=new Point(6,7); /*ã‚´ãƒ¼ãƒ«ã®åº§æ¨™*/
-
-
-	static int hd(int x,int y){
-  /*ãƒ’ãƒ¥ãƒ¼ãƒªã‚¹ãƒ†ã‚£ãƒƒã‚¯é–¢æ•°,
-    (x,y)åº§æ¨™ã‹ã‚‰ã‚´ãƒ¼ãƒ«ã¾ã§ã®ãƒãƒ³ãƒãƒƒã‚¿ãƒ³è·é›¢ã‚’è¨ˆç®—ã™ã‚‹*/
-    return Math.abs(x-goal.x)+Math.abs(y-goal.y);
+	static int hd(int x, int y) {
+		/*
+		 * ƒqƒ…[ƒŠƒXƒeƒBƒbƒNŠÖ”, (x,y)À•W‚©‚çƒS[ƒ‹‚Ü‚Å‚Ìƒ}ƒ“ƒnƒbƒ^ƒ“‹——£‚ğŒvZ‚·‚é*/
+		 
+		return Math.abs(x - goal.x) + Math.abs(y - goal.y);
 	}
 
-
-
-	static void sort(ArrayList<Node> l){
-  /*ãƒªã‚¹ãƒˆlã‚’æ˜‡é †ã«ã‚½ãƒ¼ãƒˆã™ã‚‹*/
-		Collections.sort(l,new NodeComparator());
+	static void sort(ArrayList<Node> l) {
+		/* ƒŠƒXƒgl‚ğ¸‡‚Éƒ\[ƒg‚·‚é*/ 
+		Collections.sort(l, new NodeComparator());
 	}
 
-	static class NodeComparator implements Comparator<Node>{
-				/*å„è¦ç´ ã®fDashã«ã¤ã„ã¦æ˜‡é †ã«ã™ã‚‹ãŸã‚ã®ã‚³ãƒ³ãƒ‘ãƒ¬ãƒ¼ã‚¿*/
-        public int compare(Node n1, Node n2) {
-                return (n1.fDash - n2.fDash);
-        }
+	static class NodeComparator implements Comparator<Node> {
+		/* Še—v‘f‚ÌfDash‚É‚Â‚¢‚Ä¸‡‚É‚·‚é‚½‚ß‚ÌƒRƒ“ƒpƒŒ[ƒ^*/ 
+		public int compare(Node n1, Node n2) {
+			return (n1.fDash - n2.fDash);
+		}
 	}
 
-	static boolean isEqual(Point p1,Point p2){
-  	/*åº§æ¨™p1ã¨åº§æ¨™p2ãŒç­‰ã—ã„ã‹ã‚’è¿”ã™
-    trueãªã‚‰ã°ç­‰ã—ã„,falseãªã‚‰ã°ç­‰ã—ããªã„*/
-  	return p1.equals(p2);
+	static boolean isEqual(Point p1, Point p2) {
+		/*
+		 * À•Wp1‚ÆÀ•Wp2‚ª“™‚µ‚¢‚©‚ğ•Ô‚· true‚È‚ç‚Î“™‚µ‚¢,false‚È‚ç‚Î“™‚µ‚­‚È‚¢*/
+		 
+		return p1.equals(p2);
 	}
 
-	static void listAdd1(ArrayList<Node> l,int x,int y,int fd,int gd){
-  /*ãƒªã‚¹ãƒˆlã«åº§æ¨™(x,y)ã§ã‹ã¤è©•ä¾¡é–¢æ•°å€¤fdã¨
-    ç¾åœ¨åœ°ç‚¹ã¾ã§ã®ã‚³ã‚¹ãƒˆgdã‚’æŒã£ãŸãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹*/
-		l.add(new Node(x,y,fd,gd));
+	static void listAdd1(ArrayList<Node> l, int x, int y, int fd, int gd) {
+		/*
+		 * ƒŠƒXƒgl‚ÉÀ•W(x,y)‚Å‚©‚Â•]‰¿ŠÖ”’lfd‚Æ Œ»İ’n“_‚Ü‚Å‚ÌƒRƒXƒggd‚ğ‚Á‚½ƒf[ƒ^‚ğ’Ç‰Á‚·‚é*/
+		 
+		l.add(new Node(x, y, fd, gd));
 	}
 
-	static void listAdd2(ArrayList<Node> l,Node n){
-  /*ãƒªã‚¹ãƒˆlã«è¦ç´ nã‚’è¿½åŠ ã™ã‚‹
-   */
+	static void listAdd2(ArrayList<Node> l, Node n) {
+		/*
+		 * ƒŠƒXƒgl‚É—v‘fn‚ğ’Ç‰Á‚·‚é
+		 */
 		l.add(n);
 	}
 
-	static Node listPickupTop(ArrayList<Node> l){
-  /*å…ˆé ­ã®è¦ç´ ã‚’ãƒªã‚¹ãƒˆlã‹ã‚‰å–ã‚Šé™¤ãï¼Œãã®å…ˆé ­ã®è¦ç´ ã‚’è¿”ã™ï¼*/
-	/*å–ã‚Šå‡ºã›ãªã„ã¨ãã¯nullã‚’è¿”ã™*/
-		if(l.size()==0) return null;
-		Node n=l.get(0);
+	static Node listPickupTop(ArrayList<Node> l) {
+		/* æ“ª‚Ì—v‘f‚ğƒŠƒXƒgl‚©‚çæ‚èœ‚«C‚»‚Ìæ“ª‚Ì—v‘f‚ğ•Ô‚·D*/ 
+		/* æ‚èo‚¹‚È‚¢‚Æ‚«‚Ínull‚ğ•Ô‚·*/ 
+		if (l.size() == 0)
+			return null;
+		Node n = l.get(0);
 		l.remove(0);
 		return n;
 	}
 
-	static Node listPickup(ArrayList<Node> l,Node n){
-  /*ãƒªã‚¹ãƒˆlã‹ã‚‰è¦ç´ Nã®åº§æ¨™ã¨ç­‰ã—ã„åº§æ¨™ã‚’æŒã£ãŸãƒ‡ãƒ¼ã‚¿ã‚’å–ã‚Šå‡ºã™*/
-	/*ãƒªã‚¹ãƒˆlä¸­ã«å­˜åœ¨ã—ãªã„å ´åˆã¯nullã‚’è¿”ã™*/
-		int idx=l.indexOf(n);
-		if(idx==-1) return null;
-		else return l.get(idx);
+	static Node listPickup(ArrayList<Node> l, Node n) {
+		/* ƒŠƒXƒgl‚©‚ç—v‘fN‚ÌÀ•W‚Æ“™‚µ‚¢À•W‚ğ‚Á‚½ƒf[ƒ^‚ğæ‚èo‚·*/ 
+		/* ƒŠƒXƒgl’†‚É‘¶İ‚µ‚È‚¢ê‡‚Ínull‚ğ•Ô‚·*/ 
+		int idx = l.indexOf(n);
+		if (idx == -1)
+			return null;
+		else
+			return l.get(idx);
 	}
 
-	static void listDel(ArrayList<Node> l,Node n){
-		/*ãƒªã‚¹ãƒˆlã‹ã‚‰ç‰¹å®šã®è¦ç´ nã‚’å–ã‚Šé™¤ã*/
+	static void listDel(ArrayList<Node> l, Node n) {
+		/* ƒŠƒXƒgl‚©‚ç“Á’è‚Ì—v‘fn‚ğæ‚èœ‚­*/ 
 		l.remove(l.indexOf(n));
 	}
 
-
-	static void printList(ArrayList<Node> l){
-  	/*ãƒªã‚¹ãƒˆlã®ã™ã¹ã¦ã®è¦ç´ ã®åº§æ¨™ã¨f_dashã‚’è¡¨ç¤ºã™ã‚‹*/
-  	for(int i=0;i<l.size();i++){
-			Node n=l.get(i);
-    	System.out.printf("(%d,%d)=%d ",n.p.x,n.p.y,n.fDash);
-  	}
-  	System.out.println();
+	static void printList(ArrayList<Node> l) {
+		/* ƒŠƒXƒgl‚Ì‚·‚×‚Ä‚Ì—v‘f‚ÌÀ•W‚Æf_dash‚ğ•\¦‚·‚é*/ 
+		for (int i = 0; i < l.size(); i++) {
+			Node n = l.get(i);
+			System.out.printf("(%d,%d)=%d ", n.p.x, n.p.y, n.fDash);
+		}
+		System.out.println();
 	}
 
-	static void printResult(Node n){
-  	/*è¦ç´ nã«è‡³ã‚‹çµŒè·¯ã‚’è¡¨ç¤ºã™ã‚‹*/
-  	if(n.parent!=null) printResult(n.parent);
-  	System.out.printf("%d,%d\n",n.p.x,n.p.y);
+	static void printResult(Node n) {
+		/* —v‘fn‚ÉŠ‚éŒo˜H‚ğ•\¦‚·‚é*/ 
+		if (n.parent != null)
+			printResult(n.parent);
+		System.out.printf("%d,%d\n", n.p.x, n.p.y);
 	}
 
-
-	public static void main(String args[]){
-		ArrayList<Node> l1=new ArrayList<Node>();
-		ArrayList<Node> l2=new ArrayList<Node>();
+	public static void main(String args[]) {
+		ArrayList<Node> l1 = new ArrayList<Node>();
+		ArrayList<Node> l2 = new ArrayList<Node>();
 
 	}
 
