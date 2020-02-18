@@ -1,190 +1,184 @@
-class GAQueen{
-	static final int POP_SIZE=20;
-	static final int N=16;
+import java.util.*;
 
-	static Indiv old_pop[],new_pop[];
-	static Indiv population0[]=new Indiv[POP_SIZE];
-	static Indiv population1[]=new Indiv[POP_SIZE];
-	
-	public static void main(String args[]){
-	    // åˆæœŸé›†å›£è¨­å®š
-	    init();
-	    
-	    while(true){
-		float sumfitness = 0;
-		// å„å€‹ä½“ã®é©å¿œåº¦ã®è¨ˆç®—
-		for(int i=0; i<POP_SIZE; i++){
-		    calcPhenotype(old_pop[i]);
-		    calcFitness(old_pop[i]);
-		    // é›†å›£ã®è©•ä¾¡
-		    if(old_pop[i].fitness >= 1.0){
-			print(old_pop[i]);
-			break;
-		    }
-		    sumfitness += old_pop[i].fitness;
-		}
-		// é¸æŠ
-	        float[] roulette = new int[POP_SIZE];
-		float before = 0;
-		for(int i=0; i<POP_SIZE; i++){
-		    roulette[i] = before + old_pop[i];
-		    before = roulette[i];
-		}
-		for(int i=0; i<POP_SIZE; i++){
-		    float ranbom = ((float)Math.random() * POP_SIZE)
-		    for(int j=0; j<POP_SIZE; j++){
-			if(ranbom < roulette[j]){
-			    new_pop[i] = old_pop[j];
-			    break;
+class GAQueen {
+	static final int POP_SIZE = 20;
+	static final int N = 16;
+
+	static Indiv old_pop[], new_pop[];
+	static Indiv population0[] = new Indiv[POP_SIZE];
+	static Indiv population1[] = new Indiv[POP_SIZE];
+
+	public static void main(String args[]) {
+		// ‰ŠúW’cİ’è
+		init();
+
+		// ‰½¢‘ã–Ú‚©ƒJƒEƒ“ƒg‚·‚é
+		int cnt = 0;
+
+		while (true) {
+			float sumfitness = 0;
+			// ŠeŒÂ‘Ì‚Ì“K‰“x‚ÌŒvZ
+			for (int i = 0; i < POP_SIZE; i++) {
+				// •\Œ»Œ^‚ÌŒvZ
+				calcPhenotype(old_pop[i]);
+				// “K—p“x‚ÌŒvZ
+				calcFitness(old_pop[i]);
+				// W’c‚Ì•]‰¿
+				if (old_pop[i].fitness >= 1.0) {
+					print(old_pop[i]);
+					System.out.println("“š‚¦‚ğ‹‚ß‚é‚½‚ß‚É"+cnt+"¢‘ã‚©‚©‚è‚Ü‚µ‚½B");
+					return;
+				}
+				sumfitness = sumfitness + old_pop[i].fitness;
 			}
-		    }
+			// ‘I‘ğ
+			// ƒ‹[ƒŒƒbƒg•\
+			int[] roulette = new int[POP_SIZE];
+			// ƒ‹[ƒŒƒbƒg‚ğg—p‚µ‚½“K—p“x‚Ì‡Œv‚ğ‘ã“ü‚·‚é•Ï”
+			float new_sumfitness;
+			for (int i = 0; i < POP_SIZE; i++) {
+				// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğì¬
+				float ranbom = ((float) Math.random() * sumfitness);
+				new_sumfitness = 0;
+				for (int j = 0; j < POP_SIZE; j++) {
+					// “K—p“x‚Ì‡Œv‚ğXV
+					new_sumfitness = new_sumfitness + old_pop[j].fitness;
+					if (ranbom <= new_sumfitness) {
+						roulette[i] = j;
+						break;
+					}
+				}
+			}
+			// Œğ³
+			// Œğ³‚ÍƒyƒA‚Ås‚¤‚½‚ßA2‚¸‚Â‘‚â‚·
+			for (int i = 0; i < POP_SIZE; i=i+2) {
+				// Œğ³‚ÌŠm—¦‚Í0.6
+				if(Math.random()<=0.6){
+					// Œğ³êŠ‚ğw’è
+					int index = (int)Math.random()*N;
+					// Œğ³‚ª”­¶
+					for(int j = 0; j < N; j++){
+						// Œğ³‚·‚éê‡
+						if(index > j){
+							//new_pop[i].genotype[j]=old_pop[roulette[i+1]].genotype[j];
+							//new_pop[i+1].genotype[j]=old_pop[roulette[i]].genotype[j];
+							
+							new_pop[i].genotype[j]=old_pop[i+1].genotype[j];
+							new_pop[i+1].genotype[j]=old_pop[i].genotype[j];
+						}
+						// Œğ³‚µ‚È‚¢ê‡
+						else{
+							//new_pop[i].genotype[j]=old_pop[roulette[i]].genotype[j];
+							//new_pop[i+1].genotype[j]=old_pop[roulette[i+1]].genotype[j];
+							
+							new_pop[i].genotype[j]=old_pop[roulette[i+1]].genotype[j];
+							new_pop[i+1].genotype[j]=old_pop[roulette[i]].genotype[j];
+						}
+					}
+				}
+
+			}
+
+			// “Ë‘R•ÏˆÙ
+			for(int i=0; i < POP_SIZE; i++ ){
+				for(int j = 0; j < N; j++){
+					// “Ë‘R•ÏˆÙ‚·‚éŠm—¦‚Í0.0333
+					if(Math.random()<=0.0333){
+						new_pop[i].genotype[j] = (int)(Math.random()*(N-j));
+					}
+				}
+			}
+
+			// old_pop‚Ænew_pop‚Ì“ü‚ê‘Ö‚¦
+			Indiv[] tmp = new_pop;
+			new_pop = old_pop;
+			old_pop = tmp;
+
+			// ¢‘ã‚ÌƒJƒEƒ“ƒg
+			cnt++;
+
 		}
-		// äº¤å‰
-		
-		
-	    }
-		
+
 	}
 
-	static void init(){/*åˆæœŸåŒ–(åˆæœŸé›†å›£ç”Ÿæˆ)*/
-	    int i,j;
-	    old_pop=population0;/*é›†å›£ã®ãƒã‚¤ãƒ³ã‚¿ã«å®Ÿä½“ã®é…åˆ—ã‚’å‰²ã‚Šå½“ã¦ã‚‹*/
-	    new_pop=population1;/*é›†å›£ã®ãƒã‚¤ãƒ³ã‚¿ã«å®Ÿä½“ã®é…åˆ—ã‚’å‰²ã‚Šå½“ã¦ã‚‹*/
-	    for(i=0;i<POP_SIZE;i++){
-		population0[i]=new Indiv();
-		population1[i]=new Indiv();
-		for(j=0;j<N;j++){
-		    old_pop[i].genotype[j]=(int)(Math.random()*(N-j));/*ãƒ©ãƒ³ãƒ€ãƒ ã«éºä¼å­ã‚’ç”Ÿæˆã™ã‚‹*/
+	static void init() {/* ‰Šú‰»(‰ŠúW’c¶¬)*/  
+		int i, j;
+		old_pop = population0;/* W’c‚Ìƒ|ƒCƒ“ƒ^‚ÉÀ‘Ì‚Ì”z—ñ‚ğŠ„‚è“–‚Ä‚é*/  
+		new_pop = population1;/* W’c‚Ìƒ|ƒCƒ“ƒ^‚ÉÀ‘Ì‚Ì”z—ñ‚ğŠ„‚è“–‚Ä‚é*/  
+		for (i = 0; i < POP_SIZE; i++) {
+			population0[i] = new Indiv();
+			population1[i] = new Indiv();
+			for (j = 0; j < N; j++) {
+				old_pop[i].genotype[j] = (int) (Math.random() * (N - j));/* ƒ‰ƒ“ƒ_ƒ€‚Éˆâ“`q‚ğ¶¬‚·‚é*/  
+			}
 		}
-	    }
 	}
 
-
-	static void calcPhenotype(Indiv t){/* tã§æŒ‡ã—ãŸå€‹ä½“ã«å¯¾ã—ã¦è¡¨ç¾å‹ã‚’è¨ˆç®—ã™ã‚‹ã€‚*/
-            /*çµæœã¯t.phenotypeã¸å…¥ã‚‹*/
-	    int j,k;
-	    int w[]=new int[N];
-	    for(j=0;j<N;j++) w[j]=j;
-	    for(j=0;j<N;j++){
-		t.phenotype[j]=w[t.genotype[j]];
-		for(k=t.genotype[j];k<N-j-1;k++) w[k]=w[k+1];
-	    }
-	}
-
-	static void calcFitness(Indiv t){/* tã§æŒ‡ã—ãŸå€‹ä½“ã«å¯¾ã—ã¦é©å¿œåº¦ã‚’è¨ˆç®—ã™ã‚‹ã€‚*/
-            /*äº‹å‰ã«phenotypeã‚’è¨ˆç®—ã™ã‚‹å¿…è¦ã‚ã‚Š*/
-            /*çµæœã¯t.fitnessã¸å…¥ã‚‹ã€‚*/
-	    int ng,i,j;
-	    ng=0;
-	    for(i=0;i<N;i++){
-		for(j=i+1;j<N;j++){
-		    if(t.phenotype[j]-t.phenotype[i]==j-i) ng++;
-		    if(t.phenotype[i]-t.phenotype[j]==j-i) ng++;
+	static void calcPhenotype(Indiv t) {/* t‚Åw‚µ‚½ŒÂ‘Ì‚É‘Î‚µ‚Ä•\Œ»Œ^‚ğŒvZ‚·‚éB*/  
+		/* Œ‹‰Ê‚Ít.phenotype‚Ö“ü‚é*/  
+		int j, k;
+		int w[] = new int[N];
+		for (j = 0; j < N; j++)
+			w[j] = j;
+		for (j = 0; j < N; j++) {
+			t.phenotype[j] = w[t.genotype[j]];
+			for (k = t.genotype[j]; k < N - j - 1; k++)
+				w[k] = w[k + 1];
 		}
-	    }
-	    t.fitness=(float)(1.0/(1.0+ng));
 	}
 
-	static void print(Indiv t){/*tã®å€‹ä½“ã®éºä¼å­å‹,è¡¨ç¾å‹,å®Ÿéš›ã®ã‚¯ã‚¤ãƒ¼ãƒ³ã®é…ç½®ã‚’è¡¨ç¤ºã™ã‚‹*/
-	    int j,k;
-	    int r[]=new int[N],w[]=new int[N];
-
-	    for(j=0;j<N;j++) System.out.print(t.genotype[j]+" ");
-	    System.out.println();
-	    for(j=0;j<N;j++) w[j]=j;
-	    for(j=0;j<N;j++){
-		r[j]=w[t.genotype[j]];
-		for(k=t.genotype[j];k<N-j-1;k++) w[k]=w[k+1];
-	    }
-	    for(j=0;j<N;j++) System.out.print(r[j]+" ");
-	    System.out.println();
-	    printp(r);
-	}
-
-	static void printp(int g[]){
-	    int i,j;
-	    for(i=0;i<N;i++){
-		for(j=0;j<N;j++){
-		    if(g[j]==i) System.out.print("ï¼ ");
-		    else System.out.print("ãƒ­");
+	static void calcFitness(Indiv t) {/* t‚Åw‚µ‚½ŒÂ‘Ì‚É‘Î‚µ‚Ä“K‰“x‚ğŒvZ‚·‚éB*/  
+		/* –‘O‚Éphenotype‚ğŒvZ‚·‚é•K—v‚ ‚è*/  
+		/* Œ‹‰Ê‚Ít.fitness‚Ö“ü‚éB*/  
+		int ng, i, j;
+		ng = 0;
+		for (i = 0; i < N; i++) {
+			for (j = i + 1; j < N; j++) {
+				if (t.phenotype[j] - t.phenotype[i] == j - i)
+					ng++;
+				if (t.phenotype[i] - t.phenotype[j] == j - i)
+					ng++;
+			}
 		}
+		t.fitness = (float) (1.0 / (1.0 + ng));
+	}
+
+	static void print(Indiv t) {/* t‚ÌŒÂ‘Ì‚Ìˆâ“`qŒ^,•\Œ»Œ^,ÀÛ‚ÌƒNƒC[ƒ“‚Ì”z’u‚ğ•\¦‚·‚é*/  
+		int j, k;
+		int r[] = new int[N], w[] = new int[N];
+
+		for (j = 0; j < N; j++)
+			System.out.print(t.genotype[j] + " ");
 		System.out.println();
-	    }
+		for (j = 0; j < N; j++)
+			w[j] = j;
+		for (j = 0; j < N; j++) {
+			r[j] = w[t.genotype[j]];
+			for (k = t.genotype[j]; k < N - j - 1; k++)
+				w[k] = w[k + 1];
+		}
+		for (j = 0; j < N; j++)
+			System.out.print(r[j] + " ");
+		System.out.println();
+		printp(r);
+	}
+
+	static void printp(int g[]) {
+		int i, j;
+		for (i = 0; i < N; i++) {
+			for (j = 0; j < N; j++) {
+				if (g[j] == i)
+					System.out.print("—");
+				else
+					System.out.print("ƒ");
+			}
+			System.out.println();
+		}
 	}
 }
 
-
-class Indiv{
-	int genotype[]=new int[GAQueen.N];
-	int phenotype[]=new int[GAQueen.N];
+class Indiv {
+	int genotype[] = new int[GAQueen.N];
+	int phenotype[] = new int[GAQueen.N];
 	float fitness;
 }
-
-/*
-import java.util.*;
-class GAQueen{
-    static final int POP_SIZE=20;
-    static final int N=16;
-    static Indiv old_pop[],new_pop[];
-    static Indiv population0[]=new Indiv[POP_SIZE];
-    static Indiv population1[]=new Indiv[POP_SIZE];
-    public static void main(String args[]){
- init();
- while(true){
-     float old_fitsum = 0;//é©å¿œåº¦ã®åˆè¨ˆ
-     for(int i=0;i<POP_SIZE;i++){
-  calcPhenotype(old_pop[i]);//è¡¨ç¾å‹è¨ˆç®—
-  calcFitness(old_pop[i]);//é©å¿œåº¦è¨ˆç®—
-  if(old_pop[i].fitness>=1){//è©•ä¾¡
-      print(old_pop[i]);
-      System.out.println("end");
-      return;
-  }
-  old_fitsum += old_pop[i].fitness;
-     }
-     //ãƒ«ãƒ¼ãƒ¬ãƒƒãƒˆé¸æŠ(ãƒšã‚¢ã«ãªã‚‹æ·»å­—ã‚’æ±ºã‚ã‚‹)
-     double roul;//é©å¿œåº¦å†…ãƒ©ãƒ³ãƒ€ãƒ 
-     float new_fitsum = 0;//é©å¿œåº¦ã®åˆè¨ˆ
-     int roulIdx[] = new int[POP_SIZE];//éºä¼å­ã‚³ãƒ¼ãƒ‰(æ•°å­—ã®ä½ç½®)
-     for(int j=0;j<POP_SIZE;j++){
-  roul=Math.random()*old_fitsum;
-  new_fitsum=0;
-  for(int i=0;i<POP_SIZE;i++){
-      new_fitsum+=old_pop[i].fitness;
-      if(roul<=new_fitsum){
-   roulIdx[j]=i;
-   break;
-      }
-  }
-     }
-     //äº¤å‰
-     for(int i=0;i<POP_SIZE;i+=2){//ãƒšã‚¢
-  if(Math.random()<=0.6){
-      int crossIdx = (int)(Math.random()*N); //äº¤å‰ã™ã‚‹å ´æ‰€
-      for(int j=0;j<N;j++){
-   if(crossIdx<=j){//äº¤å‰ã—ãªã„éƒ¨åˆ†
-       new_pop[i].genotype[j]=old_pop[roulIdx[i]].genotype[j];
-       new_pop[i+1].genotype[j]=old_pop[roulIdx[i+1]].genotype[j];
-   }else{//äº¤å‰ã™ã‚‹éƒ¨åˆ†
-       new_pop[i].genotype[j]=old_pop[roulIdx[i+1]].genotype[j];
-       new_pop[i+1].genotype[j]=old_pop[roulIdx[i]].genotype[j];
-   }
-      }
-  }
-     }
-     //çªç„¶å¤‰ç•°
-     Random mutantoP = new Random();//ã™ã‚‹ã‹ã—ãªã„ã‹ã®ç¢ºç‡åˆ¤å®šç”¨
-     for(int i=0;i<POP_SIZE;i++){
-  for(int j=0;j<N;j++){
-      if(mutantoP.nextDouble() <= 0.0333){
-   //å¤‰ç•°
-   new_pop[i].genotype[j] = (int)(Math.random()*(N-j));
-      }
-  }
-     }
-     Indiv[] tmp = new_pop;
-     new_pop = old_pop;
-     old_pop = tmp;
- }
-    }
-*/
